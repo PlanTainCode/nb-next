@@ -3,14 +3,14 @@ import Header from '../Header'
 import SideBar from '../SideBar'
 import SideRightBar from '../SideRightBar'
 
-function Layout({children, global}) {
+function Layout({children, global, types, info}) {
   return (
     <div className='wrapper'>
       <Header global={global} />
       <div className="grid">
-        <SideBar />
+        <SideBar types={types} />
         {children}
-        <SideRightBar />
+        <SideRightBar info={info} />
       </div>
     </div>
   )
