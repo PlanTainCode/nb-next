@@ -3,8 +3,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { fetchAPI } from "../lib/api";
 
-export default function Home({global, types, info}) {
-  // console.log(types)
+export default function Home({global, types, info, prenews}) {
+  console.log(prenews)
   return (
     <>
       <Head>
@@ -13,9 +13,10 @@ export default function Home({global, types, info}) {
       <Layout global={global} types={types} info={info}>
         <div className='news'>
           <div className='news__prenews'>
-            <PreloadNew />
-            <PreloadNew />
-            <PreloadNew />
+            {prenews.map((prenew) => 
+              <PreloadNew title={prenew.attributes.title} description={prenew.attributes.description} date={prenew.attributes.date} />
+            )}
+            
           </div>
           <div className='news__mainnews'>
             <New />
@@ -31,24 +32,35 @@ export default function Home({global, types, info}) {
 
 export async function getStaticProps() {
 
-  const globalRes = await fetchAPI("/global",
-    {populate: "deep,5"}
-  )
+  const [globalRes, typesRes, infoRes] = await Promise.all([
+    fetchAPI("/global", {populate: "deep,5"}),
+    fetchAPI("/types", {populate: "deep,5"}),
+    fetchAPI("/info", {populate: "deep,5"}),
+  ])
 
-  const typesRes = await fetchAPI("/types",
-    {populate: "deep,5"}
+  const preNewsRes = await fetchAPI("/newses",{
+    sort: "publishedAt:desc",
+    populate: "deep,5",
+    filters: {
+      types: {
+        title: {
+          $eq: "Заметки",
+        }
+      }
+    },
+    pagination: {
+      page: 1,
+      pageSize: 3,
+    },
+  }
   )
-
-  const infoRes = await fetchAPI("/info",
-    {populate: "deep,5"}
-  )
-
 
   return {
     props: {
       global: globalRes.data,
       types: typesRes.data,
       info: infoRes.data,
+      prenews: preNewsRes.data,
     },
     revalidate: 1,
   };

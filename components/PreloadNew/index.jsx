@@ -1,8 +1,14 @@
 import React from 'react'
 
-function PreloadNew() {
+function PreloadNew({title, description, date}) {
   return (
-    <div>PreloadNew</div>
+    <div className="preloadnews">
+      <div className="preloadnews__text">
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </div>
+        <span>{date}</span>
+    </div>
   )
 }
 
