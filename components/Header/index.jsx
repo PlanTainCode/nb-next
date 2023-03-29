@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import React from 'react'
 
-function Header({global}) {
+function Header({global, func}) {
   return (
     <header className='header'>
         <div className="header__left-col">
-            <div className='header__left-col--icon'>
+            <div className='header__left-col--icon' onClick={() => func()}>
                 <span></span>
                 <span></span>
                 <span></span>

@@ -4,11 +4,16 @@ import SideBar from '../SideBar'
 import SideRightBar from '../SideRightBar'
 
 function Layout({children, global, types, info}) {
+  const [bar, setBar] = React.useState(false)
+
+  const toggleBar = () => {
+    setBar(!bar)
+  }
   return (
     <div className='wrapper'>
-      <Header global={global} />
+      <Header global={global} func={toggleBar} />
       <div className="grid">
-        <SideBar types={types} />
+        <SideBar types={types} callBar={bar} />
         {children}
         <SideRightBar info={info} />
       </div>

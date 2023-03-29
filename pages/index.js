@@ -3,8 +3,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { fetchAPI } from "../lib/api";
 
-export default function Home({global, types, info, prenews}) {
-  console.log(prenews)
+export default function Home({global, types, info, prenews, news}) {
+  console.log(news.map((item) => item))
   return (
     <>
       <Head>
@@ -19,10 +19,10 @@ export default function Home({global, types, info, prenews}) {
             
           </div>
           <div className='news__mainnews'>
-            <New />
-            <New />
-            <New />
-            <New />
+            {news.map((item) => 
+              <New slug={item.attributes.slug} type={item.attributes.types.data[0].attributes.title} date={item.attributes.date} title={item.attributes.title} description={item.attributes.description} pic={item.attributes.media.data.attributes}  />
+            )}
+            
           </div>
         </div>
       </Layout>
@@ -52,7 +52,20 @@ export async function getStaticProps() {
       page: 1,
       pageSize: 3,
     },
-  }
+  })
+
+  const newsRes = await fetchAPI("/newses", 
+    {
+      sort: "publishedAt:desc", 
+      populate: "deep,5", 
+      filters: {
+        types: {
+          title: {
+            $ne: "Заметки",
+          }
+        }
+      },
+    }
   )
 
   return {
@@ -61,6 +74,7 @@ export async function getStaticProps() {
       types: typesRes.data,
       info: infoRes.data,
       prenews: preNewsRes.data,
+      news: newsRes.data,
     },
     revalidate: 1,
   };

@@ -2,13 +2,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-function SideBar({types}) {
+function SideBar({types, callBar}) {
   return (
     <div className="sidebar">
       <ul>
         {types.map((type, index) => 
-          <li key={`${index}__${type.id}`}>
-            <Link href={type.attributes.link}>
+          <li key={`${index}__${type.id}`} className={callBar ? "active" : ""}>
+            <Link href={type.attributes.link} className={callBar ? 'active' : ''}>
               <Image 
                   width={type.attributes.pic.data.attributes.width}
                   height={type.attributes.pic.data.attributes.height}
