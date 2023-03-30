@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { fetchAPI } from "../lib/api";
 
 export default function Home({global, types, info, prenews, news}) {
-  console.log(news.map((item) => item))
+  // console.log(news.map((item) => item))
   return (
     <>
       <Head>

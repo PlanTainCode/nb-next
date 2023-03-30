@@ -1,7 +1,24 @@
+import axios from 'axios'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 function Header({global, func}) {
+ 
+    const [search, setSearch] = React.useState(false)
+    const [input, setInput] = React.useState()
+
+
+    const toggleSearch = () => {
+        setSearch(!search);
+        axios.get(`https://nb-test-strapi.ru/api/newses/?filters[title][$contains]=${input}&populate=deep,5`).then((resp) => setState(resp.data.data))
+    }
+
+    const [state, setState] = React.useState(null)
+
+    console.log(input)
+    console.log(state)
+
   return (
     <header className='header'>
         <div className="header__left-col">
@@ -20,8 +37,8 @@ function Header({global, func}) {
             </div>
         </div>
         <div className="header__center-col">
-            <input type="text" placeholder='поиск' />
-            <button>
+            <input type="text" placeholder='поиск' onChange={(e) => setInput(e.target.value)} />
+            <button onClick={() => toggleSearch()}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M20 11C20 15.97 15.97 20 11 20C6.03 20 2 15.97 2 11C2 6.03 6.03 2 11 2" stroke="#292D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M18.9299 20.6898C19.4599 22.2898 20.6699 22.4498 21.5999 21.0498C22.4499 19.7698 21.8899 18.7198 20.3499 18.7198C19.2099 18.7098 18.5699 19.5998 18.9299 20.6898Z" stroke="#292D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -31,6 +48,31 @@ function Header({global, func}) {
                 <p>искать</p>
 
             </button>
+
+            <div className={search ? "header__center-col--search active" : "header__center-col--search"}>
+                {state !== null ?
+                <ul>
+                    {state.map((stat) => 
+                        <li>
+                            <Link href={`/news/${stat.attributes.slug}`}>
+                                <Image 
+                                    width={stat.attributes.media.data.attributes.width}
+                                    height={stat.attributes.media.data.attributes.height}
+                                    src={`${process.env.NEXT_PUBLIC_STRAPI_API_URL}` + stat.attributes.media.data.attributes.url} 
+                                    alt={stat.attributes.media.data.attributes.alternativeText || ""}
+                                />
+                                <span>
+                                    <h2>{stat.attributes.title}</h2>
+                                    <p>{stat.attributes.description}</p>
+                                </span>
+                            </Link>
+                        </li>
+                    )}
+                </ul>
+                :
+                <p>вы ничего не ищите</p>
+                }
+            </div>
         </div>
         <div className="header__right-col">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

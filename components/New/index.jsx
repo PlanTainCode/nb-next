@@ -20,7 +20,7 @@ function New({slug, type, date, title, pic, description}) {
         />
       </div>
       <div className="mainnew__footer">
-        <Link href={slug}>
+        <Link href={`/news/${slug}`}>
           Перейти к новости
           <svg width="34" height="24" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M24.43 5.93L30.5 12L24.43 18.07" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
